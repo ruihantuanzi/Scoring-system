@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>员工综合考核评价管理系统</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --danger-color: #ef233c;
+            --danger-hover: #d90429;
+            --text-color: #2b2d42;
+            --light-bg: #f8f9fa;
+            --border-color: #e9ecef;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: #f5f7ff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #4895ef);
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-info span {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .score-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .score-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .score-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .score-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+        }
+        
+        .score-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        
+        .score-table tr:not(:last-child) td {
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .score-table tr:hover td {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .score-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+        
+        .score-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            outline: none;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            border: none;
+            font-size: 0.95rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 4px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(239, 35, 60, 0.3);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .error {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            background-color: rgba(239, 35, 60, 0.05);
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .success {
+            color: #38b000;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            background-color: rgba(56, 176, 0, 0.05);
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        @media (max-width: 1200px) {
+            .user-info {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 0.5rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .score-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .btn-group {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .score-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .user-info span {
+                display: none;
+            }
+            
+            .user-info span:last-child {
+                display: inline;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container header-content">
+            <h1>员工综合考核评价管理系统</h1>
+            <div class="user-info">
+                <span>评分人：{{ user.name }}</span>
+                <span>所属单位：{{ user.company }}</span>
+                <span>部门名称：{{ user.department }}</span>
+                <span>职位类别：{{ user.position_type }}</span>
+                <button class="btn btn-outline" onclick="handleLogout()" style="color: rgb(30, 194, 104); border-color: rgba(30, 41, 136, 0.5);">
+                    ← 登出
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="score-container">
+            <form id="scoreForm" action="/submit_score" method="POST">
+                <div class="score-header">
+                    <h2>评分信息填写</h2>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary" id="submitBtn" disabled onclick="return submitForm()">提交评分</button>
+                        <a href="/view_scores" class="btn btn-primary">查看已评分</a>
+                    </div>
+                </div>
+
+                <table class="score-table">
+                    <thead>
+                        <tr>
+                            <th>被评人</th>
+                            <th>所属单位</th>
+                            <th>部门名称</th>
+                            <th>职位类别</th>
+                            <th>指标1</th>
+                            <th>指标2</th>
+                            <th>指标3</th>
+                            <th>指标4</th>
+                            <th>指标5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for score in scores %}
+                        <tr>
+                            <td>{{ score.ratee_name }}</td>
+                            <td>{{ score.ratee_company }}</td>
+                            <td>{{ score.ratee_department }}</td>
+                            <td>{{ score.ratee_position_type }}</td>
+                            <td>
+                                <input type="hidden" name="score_id_{{ loop.index0 }}" value="{{ score.id }}">
+                                <input type="number" name="indicator1_{{ loop.index0 }}" min="0" max="20" required 
+                                       class="score-input indicator-input" 
+                                       data-score-id="{{ score.id }}" 
+                                       data-indicator="1">
+                            </td>
+                            <td>
+                                <input type="number" name="indicator2_{{ loop.index0 }}" min="0" max="20" required 
+                                       class="score-input indicator-input" 
+                                       data-score-id="{{ score.id }}" 
+                                       data-indicator="2">
+                            </td>
+                            <td>
+                                <input type="number" name="indicator3_{{ loop.index0 }}" min="0" max="20" required 
+                                       class="score-input indicator-input" 
+                                       data-score-id="{{ score.id }}" 
+                                       data-indicator="3">
+                            </td>
+                            <td>
+                                <input type="number" name="indicator4_{{ loop.index0 }}" min="0" max="20" required 
+                                       class="score-input indicator-input" 
+                                       data-score-id="{{ score.id }}" 
+                                       data-indicator="4">
+                            </td>
+                            <td>
+                                <input type="number" name="indicator5_{{ loop.index0 }}" min="0" max="20" required 
+                                       class="score-input indicator-input" 
+                                       data-score-id="{{ score.id }}" 
+                                       data-indicator="5">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 检查是否所有评分都已填写
+        function checkAllFilled() {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            let allFilled = true;
+            
+            // 创建一个对象来跟踪每个评分记录的填写状态
+            const scoreStatus = {};
+            
+            inputs.forEach(input => {
+                const scoreId = input.dataset.scoreId;
+                
+                // 初始化评分记录的状态
+                if (!scoreStatus[scoreId]) {
+                    scoreStatus[scoreId] = {
+                        filled: 0,
+                        total: 5  // 总共需要填写的指标数
+                    };
+                }
+                
+                if (input.value) {
+                    scoreStatus[scoreId].filled++;
+                }
+            });
+            
+            // 检查所有评分记录是否都已填写完成
+            for (const status of Object.values(scoreStatus)) {
+                if (status.filled !== status.total) {
+                    allFilled = false;
+                    break;
+                }
+            }
+            
+            document.getElementById('submitBtn').disabled = !allFilled;
+        }
+
+        function handleLogout() {
+            // 清除session
+            fetch('/logout', {
+                method: 'POST'
+            })
+            .then(() => {
+                // 重定向到登录页面
+                window.location.href = '/';
+            })
+            .catch(error => {
+                console.error('登出失败:', error);
+                window.location.href = '/';
+            });
+        }
+
+        function submitForm() {
+            // 获取表单元素
+            const scoreForm = document.getElementById('scoreForm');
+            
+            // 结构化数据
+            const structured = Array.from(new FormData(scoreForm).entries()).reduce((acc, [key, val]) => {
+                const [prefix, idx] = key.split(/_(?=\d+$)/); // 智能分割后缀
+                if(prefix) acc[idx] = {...acc[idx], [prefix]: val};
+                return acc;
+            }, {});
+
+            // 提交表单
+            fetch('/submit_score', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(Object.values(structured))
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('评分提交成功！');
+                    window.location.href = '/user';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('提交评分失败:', error);
+                alert('评分提交失败，请稍后重试。');
+            });
+
+            return false; // 阻止表单默认提交
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('input', checkAllFilled);
+            });
+        });
+    </script>
+</body>
+</html>

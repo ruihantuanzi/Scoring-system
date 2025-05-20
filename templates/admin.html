@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员界面 - 员工综合考核评价管理系统</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --text-color: #2b2d42;
+            --light-bg: #f8f9fa;
+            --border-color: #e9ecef;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--text-color);
+            background-color: #f5f7ff;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #4895ef);
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .admin-info span {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            border: none;
+            font-size: 0.95rem;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 100px);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-right: 2rem;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-color);
+            text-decoration: none;
+        }
+        
+        .nav-item:hover {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+        }
+        
+        .nav-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background-color: var(--bg-color);
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-filters {
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-group select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+        }
+
+        .stats-container {
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .company-ranking {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .ranking-table {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .content-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .action-bar {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 8px;
+            overflow: auto;
+        }
+        
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            white-space: normal;
+        }
+        
+        @media (max-width: 1200px) {
+            .layout {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 2rem;
+            }
+            
+            .nav-item {
+                padding: 1rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>员工综合考核评价管理系统</h1>
+            <div class="admin-info">
+                <span>管理员：{{ admin.name }}</span>
+                <span>所属单位：{{ admin.company }}</span>
+                <button class="btn btn-outline" onclick="handleLogout()">
+                    ← 登出
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            <div class="nav-item active" onclick="showContent('users')">
+                <span>用户信息管理</span>
+            </div>
+            <div class="nav-item" onclick="showContent('scores')">
+                <span>评分信息管理</span>
+            </div>
+            <div class="nav-item" onclick="showContent('dashboard')">
+                <span>评分完成情况</span>
+            </div>
+        </div>
+
+        <div class="main-content" id="content-dashboard" style="display: none;">
+            <div class="content-header">
+                <h2 class="content-title">评分完成情况</h2>
+            </div>
+
+            <div class="dashboard-container">
+                <div class="dashboard-filters">
+                    <div class="filter-group">
+                        <label>所属单位：</label>
+                        <select id="companyFilter" onchange="filterStats()">
+                            <option value="">全部单位</option>
+                            {% for stat in company_stats %}
+                            <option value="{{ stat.company }}">{{ stat.company }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="stats-container">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>总人数</h3>
+                            <p id="totalUsers">-</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>已完成</h3>
+                            <p id="completedUsers">-</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>未完成</h3>
+                            <p id="pendingUsers">-</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>完成率</h3>
+                            <p id="completionRate">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="company-ranking">
+                    <h3>单位完成率排名</h3>
+                    <div class="ranking-table">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>单位名称</th>
+                                    <th>总人数</th>
+                                    <th>已完成</th>
+                                    <th>未完成</th>
+                                    <th>完成率</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rankingBody">
+                                {% for stat in company_stats %}
+                                <tr>
+                                    <td>{{ stat.rank }}</td>
+                                    <td>{{ stat.company }}</td>
+                                    <td>{{ stat.total_users }}</td>
+                                    <td>{{ stat.completed }}</td>
+                                    <td>{{ stat.pending }}</td>
+                                    <td>{{ "%.1f"|format(stat.completion_rate) }}%</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content" id="content-users" style="display: block;">
+            <div class="content-header">
+                <h2 class="content-title">用户信息管理</h2>
+                <div class="action-bar">
+                    <a href="/export_users" class="btn btn-primary">
+                        导出CSV
+                    </a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>身份证号</th>
+                            <th>姓名</th>
+                            <th>所属单位</th>
+                            <th>单位编码</th>
+                            <th>部门名称</th>
+                            <th>部门编码</th>
+                            <th>职位类别</th>
+                            <th>是否管理员</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr data-id="{{ user.id_card }}">
+                            <td>{{ user.id_card }}</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.company }}</td>
+                            <td>{{ user.company_code }}</td>
+                            <td>{{ user.department }}</td>
+                            <td>{{ user.department_code }}</td>
+                            <td>{{ user.position_type }}</td>
+                            <td>{{ '是' if user.is_admin else '否' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="main-content" id="content-scores" style="display: none;">
+            <div class="content-header">
+                <h2 class="content-title">评分信息管理</h2>
+                <div class="action-bar">
+                    <a href="/admin/export_scores" class="btn btn-primary">
+                        导出CSV
+                    </a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>评分ID</th>
+                            <th>评分人</th>
+                            <th>被评分人</th>
+                            <th>权重</th>
+                            <th>指标1</th>
+                            <th>指标2</th>
+                            <th>指标3</th>
+                            <th>指标4</th>
+                            <th>指标5</th>
+                            <th>总分</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for score in scores %}
+                        <tr>
+                            <td>{{ score.id }}</td>
+                            <td>{{ score.rater_name }}</td>
+                            <td>{{ score.ratee_name }}</td>
+                            <td>{{ score.weight }}</td>
+                            <td>{{ score.indicator1 }}</td>
+                            <td>{{ score.indicator2 }}</td>
+                            <td>{{ score.indicator3 }}</td>
+                            <td>{{ score.indicator4 }}</td>
+                            <td>{{ score.indicator5 }}</td>
+                            <td>{{ score.total }}</td>
+                            <td>{{ score.status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showContent(type) {
+            const usersContent = document.getElementById('content-users');
+            const scoresContent = document.getElementById('content-scores');
+            const dashboardContent = document.getElementById('content-dashboard');
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            if (type === 'users') {
+                usersContent.style.display = 'block';
+                scoresContent.style.display = 'none';
+                dashboardContent.style.display = 'none';
+                navItems[0].classList.add('active');
+                navItems[1].classList.remove('active');
+                navItems[2].classList.remove('active');
+            } else if (type === 'scores') {
+                usersContent.style.display = 'none';
+                scoresContent.style.display = 'block';
+                dashboardContent.style.display = 'none';
+                navItems[0].classList.remove('active');
+                navItems[1].classList.add('active');
+                navItems[2].classList.remove('active');
+            } else {
+                usersContent.style.display = 'none';
+                scoresContent.style.display = 'none';
+                dashboardContent.style.display = 'block';
+                navItems[0].classList.remove('active');
+                navItems[1].classList.remove('active');
+                navItems[2].classList.add('active');
+            }
+        }
+
+        function initializeCompanyFilter() {
+            const stats = JSON.parse('{{ company_stats_json|safe }}');
+            const select = document.getElementById('companyFilter');
+            
+            // 清空选项
+            select.innerHTML = '<option value="">全部单位</option>';
+            
+            // 添加单位选项
+            stats.forEach(stat => {
+                const option = document.createElement('option');
+                option.value = stat.company;
+                option.textContent = stat.company;
+                select.appendChild(option);
+            });
+        }
+
+        function filterStats() {
+            const selectedCompany = document.getElementById('companyFilter').value;
+            const stats = JSON.parse('{{ company_stats_json|safe }}');
+            
+            let totalUsers = 0;
+            let completedUsers = 0;
+            let pendingUsers = 0;
+            let completionRate = 0;
+
+            if (selectedCompany) {
+                const companyStat = stats.find(stat => stat.company === selectedCompany);
+                if (companyStat) {
+                    totalUsers = companyStat.total_users;
+                    completedUsers = companyStat.completed;
+                    pendingUsers = companyStat.pending;
+                    completionRate = companyStat.completion_rate;
+                }
+            } else {
+                // 如果选择全部单位，计算总和
+                totalUsers = stats.reduce((sum, stat) => sum + stat.total_users, 0);
+                completedUsers = stats.reduce((sum, stat) => sum + stat.completed, 0);
+                pendingUsers = stats.reduce((sum, stat) => sum + stat.pending, 0);
+                completionRate = (completedUsers / totalUsers * 100) || 0;
+            }
+
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('completedUsers').textContent = completedUsers;
+            document.getElementById('pendingUsers').textContent = pendingUsers;
+            document.getElementById('completionRate').textContent = completionRate.toFixed(1) + '%';
+        }
+
+        function handleLogout() {
+            fetch('/logout', {
+                method: 'POST'
+            })
+            .then(() => {
+                window.location.href = '/';
+            })
+            .catch(error => {
+                console.error('登出失败:', error);
+                window.location.href = '/';
+            });
+        }
+
+        // 初始化统计数据和单位筛选器
+        initializeCompanyFilter();
+        filterStats();
+    </script>
+</body>
+</html>

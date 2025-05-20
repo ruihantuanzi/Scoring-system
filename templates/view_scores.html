@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>已评分信息</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --success-color: #4cc9f0;
+            --text-color: #2b2d42;
+            --light-bg: #f8f9fa;
+            --border-color: #e9ecef;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: #f5f7ff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #4895ef);
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .scores-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .scores-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .scores-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+        }
+        
+        .scores-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        
+        .scores-table tr:not(:last-child) td {
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .scores-table tr:hover td {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .score-total {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .status-completed {
+            color: #38b000;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .status-completed::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #38b000;
+            margin-right: 6px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            border: none;
+            font-size: 0.95rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 4px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .scores-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container header-content">
+            <h1>已评分信息</h1>
+            <a href="/user" class="btn btn-outline" style="color: white; border-color: rgba(255,255,255,0.5);">
+                ← 返回
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="scores-container">
+            <h2 class="section-title">已评分记录</h2>
+
+            <div class="table-responsive">
+                <table class="scores-table">
+                    <thead>
+                        <tr>
+                            <th>被评分人</th>
+                            <th>职位</th>
+                            <th>指标1</th>
+                            <th>指标2</th>
+                            <th>指标3</th>
+                            <th>指标4</th>
+                            <th>指标5</th>
+                            <th>总分</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for score in scores %}
+                        <tr>
+                            <td>{{ score.ratee_name }}</td>
+                            <td>{{ score.ratee_position }}</td>
+                            <td>{{ score.indicator1 }}</td>
+                            <td>{{ score.indicator2 }}</td>
+                            <td>{{ score.indicator3 }}</td>
+                            <td>{{ score.indicator4 }}</td>
+                            <td>{{ score.indicator5 }}</td>
+                            <td class="score-total">{{ score.total }}</td>
+                            <td><span class="status-completed">{{ score.status }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="action-bar">
+                <a href="/export_scores" class="btn btn-primary">
+                    导出CSV
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

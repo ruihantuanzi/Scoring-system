@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工考核系统 - 登录</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --danger-color: #ef233c;
+            --text-color: #2b2d42;
+            --light-bg: #f8f9fa;
+            --border-color: #e9ecef;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
+            box-sizing: border-box; /* 新增：确保所有元素的宽度计算包含padding和border */
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7ff;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: linear-gradient(135deg, #f5f7ff 0%, #e8ecff 100%);
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            margin: 20px;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .system-banner {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .system-banner h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #4361ee, #3a0ca3);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .system-banner p {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            width: 100%; /* 新增：确保卡片宽度一致 */
+        }
+        
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #4361ee, #3a0ca3);
+        }
+        
+        .login-title {
+            text-align: center;
+            margin-bottom: 1.8rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            box-sizing: border-box; /* 新增：确保输入框宽度计算包含padding和border */
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+            outline: none;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            box-sizing: border-box; /* 新增：确保按钮宽度计算包含padding */
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 10px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            background-color: rgba(239, 35, 60, 0.05);
+            padding: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--danger-color);
+            animation: shake 0.5s ease;
+        }
+        
+        .footer-text {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 1.8rem;
+            }
+            
+            .system-banner h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="system-banner">
+            <h1>员工综合考核评价管理系统</h1>
+            <p>专业、公正、高效的员工绩效评估平台</p>
+        </div>
+        
+        <div class="login-card">
+            <h2 class="login-title">用户登录</h2>
+            
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% endif %}
+            
+            <form action="/" method="POST">
+                <div class="form-group">
+                    <label for="id_card">账号</label>
+                    <input type="text" id="id_card" name="id_card" class="form-control" required placeholder="请输入您的账号">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" class="form-control" required placeholder="请输入您的密码">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">登 录</button>
+            </form>
+        </div>
+        
+        <div class="footer-text">
+            © 2025 员工考核系统 | 七公司人力资源部
+        </div>
+    </div>
+</body>
+</html>
